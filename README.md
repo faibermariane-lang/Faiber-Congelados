@@ -1,24 +1,36 @@
 # Faiber Congelados · site institucional
 
-Site de página única, feito em HTML, CSS e JS puros e sem build. Para ver, abra o `index.html` no navegador ou publique a pasta em qualquer hospedagem estática (Netlify, Vercel, GitHub Pages, cPanel).
+Site de página única em Next.js (App Router), TypeScript, Tailwind CSS 4 e Framer Motion. Pronto para deploy na Vercel.
+
+## Rodar localmente
+
+```bash
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # build de produção
+```
 
 ## Onde editar
 
 | O quê | Onde |
 |---|---|
-| Número do WhatsApp, telefone exibido, e-mail, ano de fundação | constantes no topo de `assets/js/main.js` |
-| Mensagens prontas de cada botão | atributo `data-wa="..."` no `index.html` |
-| Cores, raios e espaçamentos | variáveis em `:root` no `assets/css/styles.css` |
+| Todos os textos, número do WhatsApp, e-mail, mensagens prontas | `src/content.ts` |
+| Cores e tamanhos de título (tokens do Tailwind) | bloco `@theme` em `src/app/globals.css` |
+| Fontes | `src/app/layout.tsx` |
+| Imagens | `public/images` |
 
-## Fotos provisórias (substituir)
+Itens a validar estão marcados com `[CONFIRMAR]`, `[LINK]` ou `[FOTO: ...]` em `src/content.ts`.
 
-Estas imagens trazem o texto "FOTO PROVISÓRIA". Para trocar, basta salvar a foto real com **o mesmo nome** (formato vertical, ~800×1000 px):
+## Foto do prato do hero
 
-- `assets/img/produtos/coxinhas.jpg`
-- `assets/img/produtos/minis-festa.jpg`
-- `assets/img/produtos/enroladinho-salsicha.jpg`
-- `assets/img/produtos/mini-pizzas.jpg`
+Enquanto não houver a foto recortada, o hero mostra uma ilustração provisória. Para trocar, salve o PNG sem fundo em `public/images/` e preencha `hero.pratoImagem` em `src/content.ts`, por exemplo:
+
+```ts
+pratoImagem: { src: "/images/prato-pasteis.png", width: 1600, height: 1000 },
+```
 
 ## Fontes
 
-Cabinet Grotesk (títulos) e Satoshi (texto), carregadas do Fontshare.
+- Títulos: Bricolage Grotesque (Google Fonts, auto-hospedada pelo `next/font`).
+- Texto: Satoshi (Fontshare, carregada com `display=swap`).
+- Títulos do cardápio: Chango (Google Fonts).

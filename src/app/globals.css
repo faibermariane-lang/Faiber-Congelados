@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+@theme {
+  /* Cores da marca */
+  --color-bordo: #6b1420;
+  --color-bordo-escuro: #4f0f18;
+  --color-tinta: #3a0c12;
+  --color-laranja: #ffb74d;
+  --color-laranja-claro: #ffe3b8;
+  --color-creme: #fbf4e8;
+  --color-creme-escuro: #f3e5cc;
+  --color-branco: #ffffff;
+
+  /* Fontes */
+  --font-display: var(--font-bricolage), "Cabinet Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Satoshi", "General Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-retro: var(--font-chango), "Bowlby One", ui-sans-serif, sans-serif;
+
+  /* Tamanhos de título */
+  --text-hero: clamp(2.5rem, 0.9rem + 5.6vw, 5.4rem);
+  --text-hero--line-height: 0.95;
+  --text-titulo: clamp(2.1rem, 1.4rem + 3.2vw, 4.25rem);
+  --text-titulo--line-height: 1;
+
+  --radius-bloco: 2rem;
+  --ease-suave: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--color-creme);
+    color: var(--color-tinta);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem; /* 17px */
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  @media (min-width: 768px) {
+    body {
+      font-size: 1.125rem; /* 18px */
+    }
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-laranja);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  ::selection {
+    background: var(--color-laranja);
+    color: var(--color-tinta);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@utility container-site {
+  width: 100%;
+  max-width: 82rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @media (min-width: 640px) {
+    padding-inline: 1.5rem;
+  }
+  @media (min-width: 1024px) {
+    padding-inline: 2.5rem;
+  }
+}
