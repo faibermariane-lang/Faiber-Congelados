@@ -1,0 +1,123 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bordo: #6b1420;
+  --color-bordo-escuro: #4f0f18;
+  --color-tinta: #3a0c12;
+  --color-laranja: #ffb74d;
+  --color-laranja-claro: #ffe3b8;
+  --color-creme: #fbf4e8;
+  --color-creme-escuro: #f3e6cf;
+  --color-branco: #ffffff;
+
+  --font-display: var(--font-bricolage), "Satoshi", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Satoshi", ui-sans-serif, system-ui, sans-serif;
+  --font-retro: var(--font-chango), var(--font-bricolage), sans-serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    background: var(--color-creme);
+    color: var(--color-tinta);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    font-family: var(--font-sans);
+    font-size: 1.0625rem; /* 17px */
+    line-height: 1.65;
+    background: var(--color-creme);
+    overflow-x: clip;
+  }
+  @media (min-width: 1024px) {
+    body {
+      font-size: 1.125rem; /* 18px */
+    }
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.03em;
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+  ::selection {
+    background: var(--color-laranja);
+    color: var(--color-tinta);
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-laranja);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+/* Cursor customizado: esconde o nativo só quando ativo */
+html.has-cursor,
+html.has-cursor * {
+  cursor: none !important;
+}
+
+/* Bolhas do preloader */
+@keyframes bolha {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-14px) scale(1);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Visitante que já viu a abertura nesta sessão (ou pediu menos movimento): sem preloader */
+html[data-intro="skip"] .preloader {
+  display: none;
+}
+
+/* Forma orgânica que "respira" atrás da cesta */
+@keyframes respira {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.06) rotate(4deg);
+  }
+}
+.respira {
+  animation: respira 7s ease-in-out infinite;
+  transform-origin: 50% 55%;
+}

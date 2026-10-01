@@ -1,24 +1,30 @@
 # Faiber Congelados · site institucional
 
-Site de página única, feito em HTML, CSS e JS puros e sem build. Para ver, abra o `index.html` no navegador ou publique a pasta em qualquer hospedagem estática (Netlify, Vercel, GitHub Pages, cPanel).
+Next.js (App Router) + TypeScript + Tailwind CSS v4, com Framer Motion, GSAP/ScrollTrigger e Lenis.
+
+```bash
+npm install
+npm run dev     # http://localhost:3000
+npm run build   # build de produção (pronto para a Vercel)
+```
 
 ## Onde editar
 
 | O quê | Onde |
 |---|---|
-| Número do WhatsApp, telefone exibido, e-mail, ano de fundação | constantes no topo de `assets/js/main.js` |
-| Mensagens prontas de cada botão | atributo `data-wa="..."` no `index.html` |
-| Cores, raios e espaçamentos | variáveis em `:root` no `assets/css/styles.css` |
+| Todos os textos, contatos, produtos e números | `src/content.ts` (itens `[CONFIRMAR]` ainda precisam ser validados) |
+| Cores e fontes (tokens) | bloco `@theme` em `src/app/globals.css` |
+| Imagens | `public/images` |
 
-## Fotos provisórias (substituir)
+## Estrutura
 
-Estas imagens trazem o texto "FOTO PROVISÓRIA". Para trocar, basta salvar a foto real com **o mesmo nome** (formato vertical, ~800×1000 px):
+- `src/components/motion`: sistema de animação reutilizável (Reveal, WordReveal, Magnetic, Tilt, Marquee, SketchLayer, SmoothScroll).
+- `src/components/illustrations`: SVGs (cesta do hero, ingredientes, sketches em traço).
+- `src/components/layout`: Preloader, Header (com menu mobile e barra de progresso) e Cursor.
+- `src/components/sections`: seções da página.
 
-- `assets/img/produtos/coxinhas.jpg`
-- `assets/img/produtos/minis-festa.jpg`
-- `assets/img/produtos/enroladinho-salsicha.jpg`
-- `assets/img/produtos/mini-pizzas.jpg`
+Com `prefers-reduced-motion` ativo, o preloader, o cursor, o parallax e os desenhos animados são desligados.
 
-## Fontes
+## Versão anterior
 
-Cabinet Grotesk (títulos) e Satoshi (texto), carregadas do Fontshare.
+O site antigo em HTML estático está em `legacy/`.
