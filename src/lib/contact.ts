@@ -1,7 +1,7 @@
-import { CONTACT, MESSAGES } from '../content/site';
+import { CONTACT, MESSAGES } from '@/content';
 
-export const whatsappHref = (message: string = MESSAGES.default) =>
-  `https://wa.me/${CONTACT.whatsappNumber}?text=${encodeURIComponent(message)}`;
+export const whatsappHref = (text: string = MESSAGES.default) =>
+  `https://wa.me/${CONTACT.whatsappNumber}?text=${encodeURIComponent(text)}`;
 
-export const mailHref = (subject: string = MESSAGES.emailSubject, body: string = MESSAGES.emailBody) =>
-  `mailto:${CONTACT.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+export const mailHref = (subject = 'Contato pelo site') =>
+  `mailto:${CONTACT.email}?subject=${encodeURIComponent(subject)}`;

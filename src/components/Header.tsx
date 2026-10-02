@@ -1,37 +1,58 @@
-import { AnimatePresence, motion } from 'motion/react';
-import { ArrowUpRight, Mail } from 'lucide-react';
+'use client';
+
+import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import { CONTACT, NAV } from '../content/site';
-import { cn } from '../lib/cn';
-import { mailHref, whatsappHref } from '../lib/contact';
-import { useActiveSection } from '../hooks/useActiveSection';
-import { Logo } from './ui/Logo';
+import { CONTACT, NAV } from '@/content';
+import { IMAGES, imageSrc } from '@/images';
+import { whatsappHref } from '@/lib/contact';
+import { getLenis, scrollToId } from '@/lib/scroll';
+import { totals, useOrder } from '@/store/order';
+import { useUi } from '@/store/ui';
 import { WhatsAppIcon } from './ui/icons';
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+function CountBadge({ count }: { count: number }) {
+  if (!count) return null;
+  return (
+    <span className="ml-1 grid min-w-6 place-items-center rounded-full bg-laranja px-1.5 text-[0.8125rem] font-bold leading-6 text-texto tabular-nums">
+      {count}
+      <span className="sr-only">{count === 1 ? 'item na comanda' : 'itens na comanda'}</span>
+    </span>
+  );
+}
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
-  const active = useActiveSection(NAV.map((n) => n.id));
+  const [hidden, setHidden] = useState(false);
+  const open = useUi((s) => s.menuOpen);
+  const setOpen = useUi((s) => s.setMenuOpen);
+  const { count } = totals(useOrder((s) => s.items));
   const panelRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
+  // fundo ao rolar; esconde ao descer e reaparece ao subir
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    let last = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 8);
+      if (Math.abs(y - last) > 6) {
+        setHidden(y > last && y > 160);
+        last = y;
+      }
+    };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Menu mobile: trava o scroll, fecha com Esc e mantém o foco dentro do painel
+  // menu: trava a rolagem, ESC fecha, foco preso no painel
   useEffect(() => {
     if (!open) return;
-    const { body } = document;
-    const prev = body.style.overflow;
-    body.style.overflow = 'hidden';
-    const first = panelRef.current?.querySelector<HTMLElement>('a');
-    first?.focus();
+    const lenis = getLenis();
+    lenis?.stop();
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    panelRef.current?.querySelector<HTMLElement>('a,button')?.focus();
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -40,169 +61,127 @@ export function Header() {
         return;
       }
       if (e.key !== 'Tab' || !panelRef.current) return;
-      const items = [toggleRef.current, ...panelRef.current.querySelectorAll<HTMLElement>('a')].filter(
-        Boolean,
-      ) as HTMLElement[];
-      const idx = items.indexOf(document.activeElement as HTMLElement);
-      const next = e.shiftKey ? (idx <= 0 ? items.length - 1 : idx - 1) : idx === items.length - 1 ? 0 : idx + 1;
+      const els = [toggleRef.current!, ...panelRef.current.querySelectorAll<HTMLElement>('a,button')];
+      const i = els.indexOf(document.activeElement as HTMLElement);
       e.preventDefault();
-      items[next].focus();
+      els[(i + (e.shiftKey ? -1 : 1) + els.length) % els.length].focus();
     };
-    document.addEventListener('keydown', onKey);
     const onResize = () => window.innerWidth >= 1024 && setOpen(false);
+    document.addEventListener('keydown', onKey);
     window.addEventListener('resize', onResize);
     return () => {
-      body.style.overflow = prev;
+      lenis?.start();
+      document.body.style.overflow = prev;
       document.removeEventListener('keydown', onKey);
       window.removeEventListener('resize', onResize);
     };
-  }, [open]);
+  }, [open, setOpen]);
+
+  const go = (id: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    setOpen(false);
+    // espera o menu fechar para destravar a rolagem
+    requestAnimationFrame(() => scrollToId(id));
+    history.replaceState(null, '', `#${id}`);
+  };
 
   const solid = scrolled || open;
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50">
-      <a
-        href="#conteudo"
-        className="eyebrow absolute left-4 top-3 z-[60] -translate-y-24 bg-bordo px-4 py-3 text-creme transition-transform focus:translate-y-0"
-      >
-        Pular para o conteúdo
-      </a>
-
+    <>
+    <header
+      className={`fixed inset-x-0 top-0 z-50 transition-transform duration-500 ease-out-expo ${
+        hidden && !open ? '-translate-y-full' : 'translate-y-0'
+      }`}
+    >
       <div
-        className={cn(
-          'relative z-[55] transition-[background-color,box-shadow,backdrop-filter] duration-500 ease-editorial',
-          solid ? 'bg-creme/95 shadow-[0_1px_0_rgba(91,58,41,0.12),0_10px_30px_-20px_rgba(35,25,21,0.35)]' : 'bg-transparent',
-        )}
+        className={`relative z-[52] transition-[background-color,box-shadow] duration-300 ${
+          solid ? 'bg-offwhite/90 shadow-[0_1px_0_rgba(107,20,32,0.1)] backdrop-blur-md' : 'bg-transparent'
+        }`}
       >
-        <div
-          className={cn(
-            'container-x flex items-center justify-between gap-6 transition-[height] duration-500 ease-editorial',
-            scrolled ? 'h-16' : 'h-20 lg:h-24',
-          )}
-        >
-          <a href="#topo" className="relative z-10 -my-2 block shrink-0 py-2 text-bordo" aria-label="Faiber Congelados, voltar ao início">
-            <Logo className={cn('h-auto transition-[width] duration-500 ease-editorial', scrolled ? 'w-[5.25rem]' : 'w-[6.25rem] lg:w-[7rem]')} title="" />
+        <div className="mx-auto flex h-[4.5rem] max-w-[90rem] items-center justify-between gap-4 px-4 sm:px-6 lg:h-20 lg:px-10">
+          <a href="#inicio" onClick={go('inicio')} className="-m-2 block p-2" aria-label="Faiber Congelados, início">
+            <Image src={imageSrc('logo')} alt="" width={IMAGES.logo.width} height={IMAGES.logo.height} priority className="h-auto w-[5.5rem] lg:w-[6.25rem]" />
           </a>
 
           <nav aria-label="Principal" className="hidden lg:block">
-            <ul className="flex items-center gap-9">
-              {NAV.map((item) => (
-                <li key={item.id}>
+            <ul className="flex items-center gap-1">
+              {NAV.map((n) => (
+                <li key={n.id}>
                   <a
-                    href={`#${item.id}`}
-                    aria-current={active === item.id ? 'true' : undefined}
-                    className={cn(
-                      'link-line py-1 text-[0.9375rem] font-medium transition-colors duration-300 hover:text-bordo',
-                      active === item.id ? 'text-bordo' : 'text-ink-soft',
-                    )}
+                    href={`#${n.id}`}
+                    onClick={go(n.id)}
+                    className="rounded-full px-4 py-2.5 text-[0.9375rem] font-medium text-texto transition-colors hover:bg-creme hover:text-bordo"
                   >
-                    {item.label}
+                    {n.label}
                   </a>
                 </li>
               ))}
             </ul>
           </nav>
 
-          <div className="flex items-center gap-3">
-            <a
-              href={whatsappHref()}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-primary hidden !min-h-11 !px-5 !py-2.5 !text-[0.8125rem] sm:inline-flex"
-            >
-              Falar com a Faiber
-              <ArrowUpRight className="btn-arrow size-4" aria-hidden="true" />
+          <div className="flex items-center gap-2">
+            <a href="#comanda" onClick={go('comanda')} className="pill pill-solid pill-sm">
+              <span className="hidden sm:inline">Fazer pedido</span>
+              <span className="sm:hidden">Pedir</span>
+              <CountBadge count={count} />
             </a>
-
             <button
               ref={toggleRef}
               type="button"
-              className="relative grid size-12 place-items-center text-bordo lg:hidden"
+              onClick={() => setOpen(!open)}
               aria-expanded={open}
               aria-controls="menu-mobile"
               aria-label={open ? 'Fechar menu' : 'Abrir menu'}
-              onClick={() => setOpen((v) => !v)}
+              className="grid size-11 place-items-center rounded-full text-bordo hover:bg-creme lg:hidden"
             >
-              <span aria-hidden="true" className="relative block h-3.5 w-7">
-                <span
-                  className={cn(
-                    'absolute left-0 top-0 h-[1.5px] w-full bg-current transition-transform duration-500 ease-editorial',
-                    open && 'translate-y-[6px] rotate-45',
-                  )}
-                />
-                <span
-                  className={cn(
-                    'absolute bottom-0 right-0 h-[1.5px] bg-current transition-all duration-500 ease-editorial',
-                    open ? 'w-full -translate-y-[6.5px] -rotate-45' : 'w-4/6',
-                  )}
-                />
+              <span aria-hidden="true" className="relative block h-3 w-6">
+                <span className={`absolute left-0 top-0 h-0.5 w-full rounded bg-current transition-transform duration-300 ${open ? 'translate-y-[5px] rotate-45' : ''}`} />
+                <span className={`absolute bottom-0 left-0 h-0.5 w-full rounded bg-current transition-transform duration-300 ${open ? '-translate-y-[5px] -rotate-45' : ''}`} />
               </span>
             </button>
           </div>
         </div>
       </div>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            id="menu-mobile"
-            ref={panelRef}
-            role="dialog"
-            aria-modal="true"
-            aria-label="Menu"
-            className="paper fixed inset-0 z-50 flex flex-col overflow-y-auto bg-creme pt-24 lg:hidden"
-            initial={{ clipPath: 'inset(0% 0% 100% 0%)' }}
-            animate={{ clipPath: 'inset(0% 0% 0% 0%)' }}
-            exit={{ clipPath: 'inset(0% 0% 100% 0%)' }}
-            transition={{ duration: 0.6, ease: EASE }}
-          >
-            <nav aria-label="Menu mobile" className="container-x flex-1">
-              <ul className="border-t border-line">
-                {[{ id: 'topo', label: 'Início' }, ...NAV].map((item, i) => (
-                  <motion.li
-                    key={item.id}
-                    className="border-b border-line"
-                    initial={{ opacity: 0, y: 18 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.15 + i * 0.06, ease: EASE }}
-                  >
-                    <a
-                      href={`#${item.id}`}
-                      onClick={() => setOpen(false)}
-                      className="group flex items-baseline gap-5 py-5 text-ink"
-                    >
-                      <span className="eyebrow w-7 text-muted tabular-nums">0{i + 1}</span>
-                      <span className="font-display text-[2.25rem] transition-colors group-hover:text-bordo xs:text-[2.6rem]">
-                        {item.label}
-                      </span>
-                    </a>
-                  </motion.li>
-                ))}
-              </ul>
-            </nav>
-
-            <motion.div
-              className="container-x grid gap-3 pb-10 pt-8"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.6 }}
-            >
-              <a href={whatsappHref()} target="_blank" rel="noopener noreferrer" className="btn btn-primary w-full">
-                <WhatsAppIcon className="size-5" />
-                Falar com a Faiber
-              </a>
-              <a href={mailHref()} className="btn btn-ghost w-full">
-                <Mail className="size-4" aria-hidden="true" />
-                Enviar e-mail
-              </a>
-              <p className="eyebrow pt-4 text-center text-muted">
-                Desde {CONTACT.foundedYear} · {CONTACT.city} — {CONTACT.stateShort}
-              </p>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </header>
+
+      {/* Menu mobile em tela cheia (fora do header: o translate dele prenderia o position:fixed) */}
+      <div
+        id="menu-mobile"
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu"
+        hidden={!open}
+        className="fixed inset-0 z-[45] overflow-y-auto bg-offwhite pt-[4.5rem] lg:hidden"
+      >
+        <nav aria-label="Menu" className="flex min-h-full flex-col px-4 pb-8 pt-6 sm:px-6">
+          <ul className="flex-1">
+            {NAV.map((n, i) => (
+              <li key={n.id} className="border-b border-bordo/15">
+                <a
+                  href={`#${n.id}`}
+                  onClick={go(n.id)}
+                  className="display flex items-baseline justify-between py-4 text-[3.25rem] text-bordo transition-colors hover:text-laranja-forte"
+                >
+                  {n.label}
+                  <span className="font-mono text-sm font-normal tracking-normal text-texto/70">0{i + 1}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-10 grid gap-3">
+            <a href={whatsappHref()} target="_blank" rel="noopener noreferrer" className="pill pill-solid w-full">
+              <WhatsAppIcon className="size-5" />
+              Pedir pelo WhatsApp
+            </a>
+            <p className="pt-3 text-center text-sm text-texto/80">
+              {CONTACT.city}, Oeste de {CONTACT.state} · desde {CONTACT.foundedYear}
+            </p>
+          </div>
+        </nav>
+      </div>
+    </>
   );
 }

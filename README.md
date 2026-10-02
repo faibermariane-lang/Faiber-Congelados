@@ -1,50 +1,40 @@
-# Faiber Congelados · site institucional
+# Faiber Congelados · site institucional (v5)
 
-Site de página única em **React + TypeScript + Tailwind CSS v4**, com animações em **Motion** (Framer Motion) e ícones **Lucide**. Build com **Vite**.
+Next.js (App Router) + TypeScript + Tailwind CSS v4 · GSAP + ScrollTrigger (sob demanda) · Lenis (só desktop com mouse) · Zustand.
 
 ```bash
 npm install
-npm run dev       # desenvolvimento em http://localhost:5173
-npm run build     # typecheck + build de produção em dist/
-npm run preview   # serve o build
+npm run dev        # http://localhost:3000
+npm run build      # build de produção
+npm run shots -- 1 # prints da fase 1 em screenshots/fase-1/ (com o dev rodando)
 ```
 
-A pasta `dist/` pode ser publicada em qualquer hospedagem estática (Netlify, Vercel, GitHub Pages, cPanel).
+- **Prancheta:** `http://localhost:3000/artboard` (só em desenvolvimento; em produção retorna 404).
+- **Site sem animações:** `/?motion=0`.
 
 ## Onde editar
 
 | O quê | Onde |
 |---|---|
-| WhatsApp, e-mail, cidade, ano de fundação | `CONTACT` em `src/content/site.ts` |
-| Mensagens prontas do WhatsApp e do e-mail | `MESSAGES` em `src/content/site.ts` |
-| Produtos, sabores, timeline, pilares | `src/content/site.ts` |
-| Cores, fontes, utilitários (`paper`, `leader`, `.btn`) | `src/index.css` |
-| SEO (title, description, Open Graph, dados estruturados) | `index.html` |
-| Sketches (ilustrações em traço) | `src/components/ui/Sketch.tsx` |
+| Textos, produtos, contato, menu | `src/content.ts` |
+| Imagens (nome → arquivo) | `src/images.ts` |
+| Cores, fontes, botões | `src/app/globals.css` |
+| SEO e dados estruturados | `src/app/layout.tsx` |
 
-## Estrutura
+## Imagens: arrastar e soltar
 
-```
-src/
-  content/site.ts         conteúdo e dados comerciais
-  lib/                    links de WhatsApp/e-mail, utilitário de classes
-  hooks/                  seção ativa no menu, detecção de mouse
-  components/
-    Header, Hero, ProductMarquee, PastelHistory, CompanyStory, Timeline,
-    Values, ProductMenu, ImpactBlock, FounderSection, ContactCTA, Contact, Footer
-    ui/                   Logo, Sketch, Picture, Reveal, MaskReveal, PhotoPlaceholder, Eyebrow, ícones
-public/images/            fotos em WebP (várias larguras para srcset)
-```
+Salve o arquivo com o nome indicado em `public/images/` e recarregue. O site detecta o arquivo e troca o placeholder automaticamente (no `dev` e no build). Nomes:
 
-## Fotografias pendentes
+- Hero (PNG recortado, fundo transparente, todos 2400×2400 e alinhados): `pastel-inteiro.png`, `pastel-massa-cima.png`, `pastel-massa-baixo.png`, `recheio-queijo.png`, `recheio-carne.png`, `recheio-tomate.png`, `recheio-cebola.png`, `recheio-salsinha.png`, `recheio-pimenta.png`, `migalhas.png` (opcional)
+- Produtos: `produtos/pastel-pacote.png`, `produtos/pastel-caixa.png`, `produtos/mini-pizza.png`, `produtos/coxinha.png`, `produtos/enroladinho.png`, `produtos/assado.png`
+- Fotos: `fundadores.jpg`, `fabrica-01.jpg`, `fabrica-02.jpg`
 
-Os espaços com a etiqueta **“Foto em produção”** aguardam fotos reais:
+Se só existir `pastel-inteiro.png` (sem as metades da massa), o hero usa o **modo simples**: o pastel inteiro flutua e os recheios explodem em volta.
 
-- **Enroladinhos, Mini pizzas e Assados**: adicione as fotos em `public/images/` (WebP, ex.: `enroladinho-800.webp`) e preencha o campo `photo` do produto em `src/content/site.ts` (mesmo formato de `PHOTOS.pastel`).
-- **Fundadores (José Moraci Faiber & Mariclei Rossi)**: salve em `public/images/fundadores-1200.webp` e preencha `FOUNDERS_PHOTO` em `src/content/site.ts`. A foto ganha automaticamente a transição de preto e branco para cor.
+## Fontes
 
-Para gerar WebP: `convert foto.jpg -resize 1200x -quality 78 public/images/nome-1200.webp` (ImageMagick) ou squoosh.app.
+Big Shoulders (títulos), Chango (retrô) e IBM Plex Mono (comanda) vêm do Google Fonts via `next/font` (auto-hospedadas). Satoshi (corpo) é carregada do Fontshare; enquanto não carrega, usa Hanken Grotesk.
 
-## Domínio
+## Deploy
 
-`index.html` usa `https://faibercongelados.com/` em canonical, Open Graph e dados estruturados. Ajuste se o domínio for outro.
+Vercel: importar o repositório, sem configuração extra.

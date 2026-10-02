@@ -1,0 +1,219 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-offwhite: #fefcf8;
+  --color-creme: #f7efe2;
+  --color-bordo: #6b1420;
+  --color-texto: #2b0a0e;
+  --color-laranja: #ffb74d;
+  --color-laranja-forte: #d9620a;
+  --color-laranja-texto: #b4510a;
+  --color-areia: #ebddc8;
+  --color-branco: #ffffff;
+
+  --font-display: var(--font-big-shoulders), 'Anton', 'Arial Narrow', sans-serif;
+  --font-retro: var(--font-chango), 'Bowlby One', sans-serif;
+  --font-sans: 'Satoshi', var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, 'SFMono-Regular', monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --breakpoint-xs: 22.5rem;
+}
+
+@custom-variant can-hover (@media (hover: hover) and (pointer: fine));
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 6rem;
+  }
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: clip;
+  }
+
+  body {
+    background: var(--color-offwhite);
+    color: var(--color-texto);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+  @media (width >= 64rem) {
+    body {
+      font-size: 1.125rem;
+    }
+  }
+
+  ::selection {
+    background: var(--color-laranja);
+    color: var(--color-texto);
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-bordo);
+    outline-offset: 3px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+}
+
+/* Título gigante: condensada, caixa-alta, entrelinha curta */
+@utility display {
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.9;
+  letter-spacing: -0.005em;
+}
+
+/* Rótulo pequeno em caixa-alta */
+@utility eyebrow {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1.35;
+}
+
+/* Desalinhamento de impressão para títulos retrô */
+@utility misprint {
+  text-shadow: 0.045em 0.035em 0 color-mix(in srgb, var(--color-laranja) 85%, transparent);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Botões em pílula */
+@layer components {
+  .pill {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    min-height: 3.25rem;
+    padding: 0.875rem 1.75rem;
+    border-radius: 999px;
+    border: 2px solid var(--color-bordo);
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    isolation: isolate;
+    transition:
+      color 0.35s var(--ease-out-expo),
+      background-color 0.35s var(--ease-out-expo),
+      transform 0.35s var(--ease-out-expo);
+  }
+  .pill:active {
+    transform: scale(0.97);
+  }
+  .pill .pill-arrow {
+    transition: transform 0.4s var(--ease-out-expo);
+  }
+  .pill:hover .pill-arrow,
+  .pill:focus-visible .pill-arrow {
+    transform: translateX(4px);
+  }
+  .pill-solid {
+    background: var(--color-bordo);
+    color: var(--color-creme);
+  }
+  .pill-solid:hover {
+    background: var(--color-texto);
+    border-color: var(--color-texto);
+  }
+  .pill-outline {
+    color: var(--color-bordo);
+    background: transparent;
+  }
+  .pill-outline:hover {
+    background: var(--color-bordo);
+    color: var(--color-creme);
+  }
+  .pill-sm {
+    min-height: 2.75rem;
+    padding: 0.5rem 1.125rem;
+    font-size: 0.9375rem;
+  }
+}
+
+/* Grão de papel global (ruído SVG, ~3,5%) */
+.paper-grain {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.17 0 0 0 0 0.04 0 0 0 0 0.05 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+html[data-motion='off'] *,
+html[data-motion='off'] *::before,
+html[data-motion='off'] *::after {
+  animation-duration: 0.01ms !important;
+  transition-duration: 0.01ms !important;
+}
+
+/* Entrada do hero (CSS puro: não depende do GSAP para aparecer) */
+@keyframes hero-rise {
+  from {
+    transform: translateY(105%);
+  }
+}
+@keyframes hero-fade {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+@keyframes reveal-fallback {
+  to {
+    opacity: 1;
+  }
+}
+.hero-line > span {
+  animation: hero-rise 1s var(--ease-out-expo) both;
+}
+.hero-fade {
+  animation: hero-fade 0.9s var(--ease-out-expo) both;
+}
+/* o palco aparece quando o GSAP assume; se ele falhar, aparece sozinho em 2s */
+html[data-js] [data-stage] {
+  opacity: 0;
+  animation: reveal-fallback 0.4s 2s forwards;
+}
+html[data-motion='off'] [data-stage] {
+  opacity: 1;
+}
