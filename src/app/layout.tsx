@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Big_Shoulders, Chango, Hanken_Grotesk, IBM_Plex_Mono } from 'next/font/google';
+import { Big_Shoulders, Chango, DM_Serif_Display, IBM_Plex_Mono, Poppins } from 'next/font/google';
 import { CONTACT, SITE } from '@/content';
 import { AppShell } from '@/components/AppShell';
 import './globals.css';
@@ -7,8 +7,10 @@ import './globals.css';
 const bigShoulders = Big_Shoulders({ weight: '900', subsets: ['latin'], display: 'swap', variable: '--font-big-shoulders' });
 const chango = Chango({ weight: '400', subsets: ['latin'], display: 'swap', variable: '--font-chango' });
 const plexMono = IBM_Plex_Mono({ weight: ['400', '500', '600'], subsets: ['latin'], display: 'swap', variable: '--font-plex-mono' });
-// Fallback local da Satoshi (carregada do Fontshare): métrica parecida, nunca bloqueia o texto
-const hanken = Hanken_Grotesk({ subsets: ['latin'], display: 'swap', variable: '--font-hanken', preload: false });
+// texto de apoio: Poppins (legível e padronizada em todo o site)
+const poppins = Poppins({ weight: ['400', '500', '600'], subsets: ['latin'], display: 'swap', variable: '--font-poppins' });
+// números com cara de impresso antigo
+const serifNum = DM_Serif_Display({ weight: '400', subsets: ['latin'], display: 'swap', variable: '--font-serif-num' });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -57,13 +59,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="pt-BR"
-      className={`${bigShoulders.variable} ${chango.variable} ${plexMono.variable} ${hanken.variable}`}
+      className={`${bigShoulders.variable} ${chango.variable} ${plexMono.variable} ${poppins.variable} ${serifNum.variable}`}
       suppressHydrationWarning
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: bootScript }} />
-        <link rel="preconnect" href="https://api.fontshare.com" crossOrigin="" />
-        <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
       <body>

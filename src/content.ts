@@ -31,11 +31,9 @@ export const NAV = [
 ] as const;
 
 export const HERO = {
-  eyebrow: 'Pastéis congelados · Chapecó, Oeste de Santa Catarina',
   lines: [
-    { text: 'Tradição.', tone: 'bordo' },
-    { text: 'Crocância.', tone: 'laranja' },
-    { text: 'Sabor.', tone: 'bordo' },
+    { text: 'Tradição', tone: 'bordo' },
+    { text: 'e qualidade.', tone: 'laranja' },
   ],
   text: 'Desde 2010, a Faiber produz pastéis congelados com receita de família e processo moderno. O mesmo sabor de sempre, com a regularidade que a sua lanchonete, distribuidora ou food service precisa.',
   ctaPrimary: 'Pedir pelo WhatsApp',

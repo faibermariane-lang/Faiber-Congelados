@@ -31,6 +31,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <ArtboardBridge />
       {children}
       <WhatsAppFloat />
+      <div className="vintage" aria-hidden="true" />
       <div className="paper-grain" aria-hidden="true" />
     </>
   );

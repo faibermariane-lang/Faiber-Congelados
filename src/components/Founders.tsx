@@ -6,7 +6,8 @@ import type { ImageAvailability } from '@/images';
 import { whatsappHref } from '@/lib/contact';
 import { motionDisabled } from '@/lib/motion';
 import { useInViewOnce } from '@/lib/useInView';
-import { ArrowRight } from './ui/icons';
+import { DoodleField } from './ui/Doodles';
+import { ArrowRight, WhatsAppIcon } from './ui/icons';
 import { Photo } from './ui/Photo';
 
 function Count({ to, suffix, run }: { to: number; suffix: string; run: boolean }) {
@@ -38,7 +39,16 @@ export function Founders({ images }: { images: ImageAvailability }) {
   const [statsRef, statsShown] = useInViewOnce<HTMLDListElement>(0.4);
 
   return (
-    <section id="fundadores" aria-labelledby="fundadores-title" className="bg-creme px-4 py-24 sm:px-6 lg:px-10 lg:py-36">
+    <section id="fundadores" aria-labelledby="fundadores-title" className="relative isolate bg-pessego px-4 py-24 sm:px-6 lg:px-10 lg:py-36">
+      <DoodleField
+        opacity={0.14}
+        items={[
+          { name: 'coxinha', x: 46, y: 6, size: 5, rotate: -10, speed: 70 },
+          { name: 'folha', x: 92, y: 30, size: 5.5, rotate: -20, color: 'text-salsa', speed: 90 },
+          { name: 'pastel', x: 52, y: 84, size: 8, rotate: 6, speed: 60 },
+          { name: 'graos', x: 4, y: 90, size: 4.5, rotate: 12, speed: 40 },
+        ]}
+      />
       <div className="mx-auto grid max-w-[90rem] items-start gap-14 lg:grid-cols-12 lg:gap-10">
         <div className="relative lg:col-span-5">
           {/* bloco laranja deslocado atrás da foto */}
@@ -51,11 +61,10 @@ export function Founders({ images }: { images: ImageAvailability }) {
         </div>
 
         <div className="lg:col-span-6 lg:col-start-7 lg:pt-6">
-          <p className="eyebrow text-laranja-texto">{FOUNDERS.eyebrow}</p>
-          <h2 id="fundadores-title" className="display mt-4 text-[clamp(3rem,8vw,7.5rem)] text-bordo">
+          <h2 id="fundadores-title" className="display text-[clamp(3rem,8vw,7.5rem)] text-bordo">
             {FOUNDERS.title}
           </h2>
-          <div className="mt-8 max-w-[60ch] space-y-5 text-texto">
+          <div className="apoio mt-8 max-w-[60ch] space-y-5 text-texto">
             {FOUNDERS.paragraphs.map((p) => (
               <p key={p.slice(0, 16)}>{p}</p>
             ))}
@@ -65,7 +74,7 @@ export function Founders({ images }: { images: ImageAvailability }) {
             {FOUNDERS.stats.map((s) => (
               <div key={s.label} className="flex flex-col-reverse">
                 <dt className="mt-2 text-sm leading-snug text-texto/85 sm:text-base">{s.label}</dt>
-                <dd className="display text-[clamp(2.75rem,6vw,5rem)] text-bordo">
+                <dd className="numero-antigo text-[clamp(2.75rem,6vw,5rem)] text-laranja-forte">
                   <Count to={s.value} suffix={s.suffix} run={statsShown} />
                 </dd>
               </div>
@@ -76,10 +85,11 @@ export function Founders({ images }: { images: ImageAvailability }) {
             href={whatsappHref('Olá, família Faiber! Vim pelo site e gostaria de conversar.')}
             target="_blank"
             rel="noopener noreferrer"
-            className="group mt-10 inline-flex min-h-11 items-center gap-2 text-lg font-bold text-bordo underline decoration-2 underline-offset-[6px] hover:decoration-laranja-forte"
+            className="pill pill-solid mt-10"
           >
+            <WhatsAppIcon className="size-5" />
             {FOUNDERS.link}
-            <ArrowRight className="size-5 transition-transform duration-300 group-hover:translate-x-1" />
+            <ArrowRight className="pill-arrow size-5" />
           </a>
         </div>
       </div>

@@ -8,6 +8,7 @@ import { useInViewOnce } from '@/lib/useInView';
 import { totals, useOrder } from '@/store/order';
 import { useUi } from '@/store/ui';
 import { DigitRoll } from './ui/DigitRoll';
+import { DoodleField } from './ui/Doodles';
 import { WhatsAppIcon } from './ui/icons';
 
 function Stamp() {
@@ -191,21 +192,30 @@ export function Comanda() {
       id="comanda"
       ref={sectionRef}
       aria-labelledby="comanda-title"
-      className="relative bg-offwhite px-4 pb-32 pt-24 sm:px-6 lg:px-10 lg:pb-32 lg:pt-32"
+      className="relative isolate bg-bordo px-4 pb-32 pt-24 sm:px-6 lg:px-10 lg:pb-32 lg:pt-32"
     >
+      <DoodleField
+        opacity={0.1}
+        items={[
+          { name: 'pimenta', x: 4, y: 70, size: 8, rotate: -18, color: 'text-creme', speed: 80 },
+          { name: 'alho', x: 30, y: 10, size: 4.5, rotate: 10, color: 'text-creme', speed: 50 },
+          { name: 'pastelRet', x: 6, y: 40, size: 9, rotate: 8, color: 'text-laranja', speed: 120 },
+          { name: 'tomate', x: 88, y: 88, size: 6, rotate: -6, color: 'text-creme', speed: 60 },
+        ]}
+      />
       <div className="mx-auto grid max-w-[90rem] gap-12 lg:grid-cols-12 lg:gap-10">
         <div className="lg:sticky lg:top-28 lg:col-span-5 lg:self-start">
-          <h2 id="comanda-title" className="misprint font-retro text-[clamp(2.75rem,6vw,5.25rem)] leading-[0.95] text-bordo">
+          <h2 id="comanda-title" className="display text-[clamp(3rem,8vw,7.5rem)] text-creme">
             {COMANDA.title}
           </h2>
-          <p className="mt-6 max-w-[38ch] text-texto">{COMANDA.text}</p>
-          <p className="mt-4 max-w-[42ch] font-mono text-sm text-texto/80">{COMANDA.note}</p>
+          <p className="apoio mt-6 max-w-[38ch] text-creme">{COMANDA.text}</p>
+          <p className="apoio mt-4 max-w-[40ch] text-laranja">{COMANDA.note}</p>
         </div>
 
         <div className="lg:col-span-7">
           <div ref={paperRef}>
           <div className="reveal-clip" data-shown={printed} style={{ transitionDuration: '0.9s' }}>
-            <div className="picote relative bg-white px-4 py-10 font-mono shadow-[0_18px_40px_-28px_rgba(43,10,14,0.45)] sm:px-9 sm:py-12">
+            <div className="picote relative bg-white px-4 py-10 font-mono shadow-[0_30px_60px_-30px_rgba(20,2,6,0.75),0_10px_24px_-14px_rgba(20,2,6,0.45)] sm:px-9 sm:py-12">
               {/* cabeçalho */}
               <header className="relative border-b-2 border-dashed border-texto/25 pb-6 pr-28 sm:pr-36">
                 <p className="text-lg font-semibold tracking-wide text-bordo">{COMANDA.paperTitle}</p>

@@ -48,7 +48,7 @@ export function WhatsAppFloat() {
       aria-label="Pedir pelo WhatsApp (abre em nova aba)"
       tabIndex={visible ? 0 : -1}
       aria-hidden={!visible}
-      className={`fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 z-40 grid size-14 place-items-center rounded-full bg-bordo text-creme transition-[transform,opacity] duration-500 ease-out-expo hover:bg-texto md:bottom-6 md:right-6 ${
+      className={`fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 z-40 grid size-14 place-items-center rounded-full bg-bordo text-creme ring-2 ring-offwhite shadow-[0_8px_20px_-8px_rgba(43,10,14,0.6)] transition-[transform,opacity] duration-500 ease-out-expo hover:bg-texto md:bottom-6 md:right-6 ${
         visible ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-6 opacity-0'
       }`}
     >

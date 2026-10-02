@@ -3,6 +3,7 @@
 import { useId, useState } from 'react';
 import { CONTACT, CONTATO } from '@/content';
 import { mailHref, whatsappHref } from '@/lib/contact';
+import { DoodleField } from './ui/Doodles';
 import { ArrowRight } from './ui/icons';
 
 type Errors = Partial<Record<'nome' | 'mensagem', string>>;
@@ -41,12 +42,20 @@ export function Contact() {
 
   return (
     <section id="contato" aria-labelledby="contato-title" className="bg-offwhite px-4 py-20 sm:px-6 lg:px-10 lg:py-28">
-      <div className="mx-auto grid max-w-[90rem] gap-12 rounded-[28px] bg-laranja px-5 py-12 sm:px-10 sm:py-16 lg:grid-cols-12 lg:gap-10 lg:px-16 lg:py-20">
+      <div className="relative isolate mx-auto grid max-w-[90rem] gap-12 overflow-hidden rounded-[28px] bg-laranja px-5 py-12 sm:px-10 sm:py-16 lg:grid-cols-12 lg:gap-10 lg:px-16 lg:py-20">
+        <DoodleField
+          opacity={0.12}
+          items={[
+            { name: 'pastelRet', x: 34, y: 4, size: 8, rotate: -14, speed: 60 },
+            { name: 'pimenta', x: 2, y: 88, size: 7, rotate: 10, speed: 50 },
+            { name: 'coxinha', x: 92, y: 84, size: 4.5, rotate: 16, speed: 70 },
+          ]}
+        />
         <div className="lg:col-span-6">
           <h2 id="contato-title" className="display text-[clamp(3.5rem,9vw,8.5rem)] text-bordo">
             {CONTATO.title}
           </h2>
-          <p className="mt-6 max-w-[44ch] text-bordo">{CONTATO.text}</p>
+          <p className="apoio mt-6 max-w-[44ch] text-bordo">{CONTATO.text}</p>
 
           <ul className="mt-10 border-t-2 border-bordo/25">
             {[
@@ -57,13 +66,13 @@ export function Contact() {
                 <a
                   href={c.href}
                   {...(c.ext ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                  className="group flex min-h-16 items-center justify-between gap-4 py-5 text-bordo"
+                  className="group flex min-h-14 items-center justify-between gap-4 py-4 text-bordo"
                 >
                   <span className="min-w-0">
                     <span className="eyebrow block">{c.label}</span>
-                    <span className="mt-1 block text-[1.25rem] font-bold [overflow-wrap:anywhere] sm:text-2xl">{c.value}</span>
+                    <span className="mt-1 block text-base font-semibold [overflow-wrap:anywhere] sm:text-lg">{c.value}</span>
                   </span>
-                  <ArrowRight className="size-7 shrink-0 transition-transform duration-300 group-hover:translate-x-2 group-focus-visible:translate-x-2" />
+                  <ArrowRight className="size-5 shrink-0 transition-transform duration-300 group-hover:translate-x-2 group-focus-visible:translate-x-2" />
                   {c.ext && <span className="sr-only">(abre em nova aba)</span>}
                 </a>
               </li>

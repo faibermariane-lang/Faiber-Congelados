@@ -18,9 +18,10 @@ function Tile({ product, real, onPick }: { product: Product; real: boolean; onPi
         type="button"
         tabIndex={-1}
         onClick={onPick}
-        className="group flex h-[10.5rem] w-[10.5rem] flex-col items-center justify-between rounded-[20px] bg-creme px-2 pb-3 pt-2.5 transition-transform duration-500 ease-out-expo hover:-translate-y-1"
+        aria-label={product.label}
+        className="group grid size-[10rem] place-items-center rounded-[20px] bg-creme p-3 transition-[transform,background-color] duration-500 ease-out-expo hover:-translate-y-1.5 hover:-rotate-2 hover:bg-pessego"
       >
-        <span className="relative block size-[6.75rem]">
+        <span className="relative block size-full">
           {real ? (
             <Image src={imageSrc(product.image)} alt="" fill sizes="108px" className="object-contain transition-transform duration-500 ease-out-expo group-hover:scale-105" draggable={false} />
           ) : (
@@ -29,7 +30,6 @@ function Tile({ product, real, onPick }: { product: Product; real: boolean; onPi
             </span>
           )}
         </span>
-        <span className="whitespace-nowrap font-retro text-[0.875rem] leading-none text-bordo">{product.label}</span>
       </button>
     </li>
   );

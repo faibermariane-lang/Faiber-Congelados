@@ -6,9 +6,15 @@ import type { ImageAvailability } from '@/images';
 import { motionDisabled } from '@/lib/motion';
 import { getLenis } from '@/lib/scroll';
 import { DigitRoll } from './ui/DigitRoll';
+import { DoodleField, type DoodleSpec } from './ui/Doodles';
 import { Photo } from './ui/Photo';
 
-const yearOf = (s: HistoryStep, current: number) => s.year ?? current;
+const DOODLES: DoodleSpec[] = [
+  { name: 'pastel', x: 78, y: 6, size: 9, rotate: -12, speed: 90 },
+  { name: 'folha', x: 2, y: 62, size: 6, rotate: 18, color: 'text-salsa', speed: 70 },
+  { name: 'graos', x: 44, y: 84, size: 5, rotate: -8, speed: 40 },
+  { name: 'coxinha', x: 90, y: 70, size: 5, rotate: 14, speed: 110 },
+];
 
 function Title({ step }: { step: HistoryStep }) {
   if (!step.highlight) return <>{step.title}</>;
@@ -90,20 +96,14 @@ export function History({ images }: { images: ImageAvailability }) {
       id="historia"
       ref={sectionRef}
       aria-labelledby="historia-title"
-      className="relative bg-creme pin:h-[330svh]"
+      className="relative isolate bg-creme pin:h-[330svh]"
     >
       <h2 id="historia-title" className="sr-only">
         {HISTORY.title}
       </h2>
 
       <div className="relative pin:sticky pin:top-0 pin:flex pin:h-[100svh] pin:flex-col pin:overflow-hidden">
-        {/* ano gigante ao fundo (modo pinado) */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden items-center justify-center pin:flex">
-          <DigitRoll
-            value={yearOf(steps[active], year)}
-            className="display text-[clamp(14rem,38vw,38rem)] text-bordo/[0.09]"
-          />
-        </div>
+        <DoodleField items={DOODLES} opacity={0.13} />
 
         {/* linha do tempo */}
         <nav aria-label="Linha do tempo" className="relative mx-auto w-full max-w-[90rem] px-4 pt-16 sm:px-6 lg:px-10 pin:order-last pin:pb-10 pin:pt-4">
@@ -125,7 +125,7 @@ export function History({ images }: { images: ImageAvailability }) {
                         i <= active ? 'bg-bordo' : 'bg-creme'
                       } ${i === active ? 'size-5 -mt-0.5' : 'size-3.5 mt-0.5'}`}
                     />
-                    <span className={`font-mono text-sm transition-colors ${i === active ? 'font-semibold text-bordo' : 'text-texto/75 group-hover:text-bordo'}`}>
+                    <span className={`numero-antigo text-xl transition-colors ${i === active ? 'text-bordo' : 'text-texto/70 group-hover:text-bordo'}`}>
                       {s.marker}
                     </span>
                   </a>
@@ -146,26 +146,31 @@ export function History({ images }: { images: ImageAvailability }) {
                 data-past={i < active}
                 className="relative grid gap-8 border-bordo/15 py-20 lg:grid-cols-12 lg:gap-10 [&:not(:first-child)]:border-t pin:pointer-events-none pin:translate-y-8 pin:border-0 pin:py-0 pin:opacity-0 pin:transition-[opacity,transform] pin:duration-700 pin:ease-out-expo pin:[grid-area:1/1] pin:data-[active=true]:pointer-events-auto pin:data-[active=true]:translate-y-0 pin:data-[active=true]:opacity-100 pin:data-[past=true]:-translate-y-8"
               >
-                {/* ano ao fundo (lista vertical) */}
-                <p aria-hidden="true" className="display pointer-events-none absolute -top-2 right-0 text-[clamp(9rem,30vw,22rem)] text-bordo/[0.08] pin:hidden">
-                  {yearOf(s, year)}
-                </p>
-
-                <div className="relative lg:col-span-5">
-                  <p className="eyebrow text-laranja-texto">{s.eyebrow}</p>
-                  <h3 id={`${s.id}-t`} className="display mt-4 text-[clamp(2.75rem,5.4vw,5.5rem)] text-texto">
+                <div className="relative flex flex-col justify-between gap-8 lg:col-span-5 pin:pb-4">
+                  <h3 id={`${s.id}-t`} className="display text-[clamp(2.75rem,5.4vw,5.5rem)] text-texto">
                     <Title step={s} />
                   </h3>
+                  {/* ano no canto inferior esquerdo, em serifada antiga */}
+                  <p className="numero-antigo text-[clamp(3rem,6vw,6rem)] text-laranja-forte">
+                    {s.year === null ? (
+                      <>
+                        <DigitRoll value={year} />
+                        <span className="sr-only">{year}</span>
+                      </>
+                    ) : (
+                      s.year
+                    )}
+                  </p>
                 </div>
 
                 <div className="relative max-w-[60ch] lg:col-span-6 lg:col-start-7 lg:pt-8">
-                  <div className="space-y-5 text-texto">
+                  <div className="apoio space-y-5 text-texto">
                     {s.paragraphs.map((p) => (
                       <p key={p.slice(0, 20)}>{p}</p>
                     ))}
                   </div>
                   {s.quote && (
-                    <p className="mt-6 border-l-4 border-bordo pl-5 text-[1.1875rem] font-medium leading-snug text-bordo lg:text-[1.3125rem]">
+                    <p className="mt-7 border-l-4 border-laranja-forte pl-5 text-[1.1875rem] font-medium leading-relaxed text-bordo md:text-[1.375rem]">
                       {s.quote}
                     </p>
                   )}

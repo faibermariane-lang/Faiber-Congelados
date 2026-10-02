@@ -8,6 +8,7 @@ import { loadGsap } from '@/lib/gsap';
 import { hasFinePointer, motionDisabled } from '@/lib/motion';
 import { scrollToId } from '@/lib/scroll';
 import { ArrowRight, ReplayIcon, WhatsAppIcon } from '../ui/icons';
+import { DoodleField } from '../ui/Doodles';
 import { LayerArt, MASSA_BAIXO, MASSA_CIMA, MIGALHAS, RECHEIOS, type LayerSpec } from './layers';
 
 const TONE = { bordo: 'text-bordo', laranja: 'text-laranja-forte' } as const;
@@ -163,15 +164,21 @@ export function Hero({ images }: { images: ImageAvailability }) {
       aria-labelledby="hero-title"
       className="relative isolate overflow-hidden bg-offwhite pb-14 pt-28 lg:min-h-[100svh] lg:pb-16 lg:pt-32"
     >
+      <DoodleField
+        opacity={0.12}
+        items={[
+          { name: 'pimenta', x: 40, y: 8, size: 6, rotate: 14, speed: 90 },
+          { name: 'folha', x: 2, y: 78, size: 5, rotate: -16, color: 'text-salsa', speed: 70 },
+          { name: 'graos', x: 30, y: 88, size: 4, rotate: 8, speed: 50 },
+          { name: 'coxinha', x: 92, y: 10, size: 4.5, rotate: 18, speed: 120 },
+          { name: 'tomate', x: 56, y: 90, size: 4.5, rotate: -12, speed: 60 },
+        ]}
+      />
       <div className="relative mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-10">
-        <p className="eyebrow hero-fade max-w-[22rem] text-bordo sm:max-w-none" style={{ animationDelay: '0.05s' }}>
-          {HERO.eyebrow}
-        </p>
-
-        {/* headline: só a 3ª linha fica acima do pastel */}
-        <h1 id="hero-title" className="display pointer-events-none relative z-20 mt-5 text-[clamp(4.5rem,min(13vw,16.5svh),13rem)] lg:mt-4">
+        {/* headline: a última linha avança por cima do pastel */}
+        <h1 id="hero-title" className="display pointer-events-none relative z-20 mt-4 text-[clamp(4.25rem,min(12vw,17svh),12.5rem)] lg:mt-6">
           {HERO.lines.map((l, i) => (
-            <span key={l.text} className={`hero-line pointer-events-auto -my-[0.16em] block w-fit overflow-hidden py-[0.16em] ${i === 2 ? "lg:ml-[27vw]" : ""}`}>
+            <span key={l.text} className="hero-line pointer-events-auto -my-[0.16em] block w-fit overflow-hidden py-[0.16em]">
               <span className={`block ${TONE[l.tone]}`} style={{ animationDelay: `${0.12 + i * 0.12}s` }}>
                 {l.text}
               </span>
@@ -220,11 +227,11 @@ export function Hero({ images }: { images: ImageAvailability }) {
           </button>
         </div>
 
-        <div className="relative z-20 mt-2 lg:mt-8 xl:flex xl:items-end xl:gap-10">
-          <p className="hero-fade max-w-[38ch] text-[1.0625rem] text-texto lg:text-[1.125rem]" style={{ animationDelay: '0.55s' }}>
+        <div className="relative z-20 mt-2 text-left lg:mt-8">
+          <p className="apoio hero-fade max-w-[40ch] text-texto" style={{ animationDelay: '0.55s' }}>
             {HERO.text}
           </p>
-          <div className="hero-fade mt-8 flex flex-col gap-3 sm:flex-row xl:mt-0 xl:flex-col xl:items-stretch" style={{ animationDelay: '0.7s' }}>
+          <div className="hero-fade mt-8 flex flex-col items-start gap-3 sm:flex-row sm:items-center" style={{ animationDelay: '0.7s' }}>
             <a href={whatsappHref()} target="_blank" rel="noopener noreferrer" className="pill pill-solid w-full sm:w-auto">
               <WhatsAppIcon className="size-5" />
               {HERO.ctaPrimary}
