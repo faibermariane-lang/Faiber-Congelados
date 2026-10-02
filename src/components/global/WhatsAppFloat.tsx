@@ -8,21 +8,37 @@ import { WhatsAppIcon } from '../ui/icons';
 /** Botão flutuante de WhatsApp: aparece depois do hero; some com o menu ou a barra da comanda. */
 export function WhatsAppFloat() {
   const [pastHero, setPastHero] = useState(false);
+  // no celular, só aparece ao rolar para cima (não fica sobre o texto durante a leitura)
+  const [goingUp, setGoingUp] = useState(true);
+  const [wide, setWide] = useState(false);
   const menuOpen = useUi((s) => s.menuOpen);
   const barVisible = useUi((s) => s.orderBarVisible);
 
   useEffect(() => {
+    let last = window.scrollY;
+    const mq = window.matchMedia('(min-width: 64rem)');
+    setWide(mq.matches);
+    const onMq = () => setWide(mq.matches);
+    mq.addEventListener('change', onMq);
     const onScroll = () => {
+      const y = window.scrollY;
+      if (Math.abs(y - last) > 8) {
+        setGoingUp(y < last);
+        last = y;
+      }
       const hero = document.getElementById('inicio');
       const limit = hero ? hero.offsetTop + hero.offsetHeight * 0.85 : window.innerHeight;
       setPastHero(window.scrollY > limit);
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      mq.removeEventListener('change', onMq);
+    };
   }, []);
 
-  const visible = pastHero && !menuOpen && !barVisible;
+  const visible = pastHero && !menuOpen && !barVisible && (wide || goingUp);
 
   return (
     <a
