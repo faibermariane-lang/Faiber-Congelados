@@ -1,24 +1,34 @@
-# Faiber Congelados · site institucional
+# Faiber Congelados · site institucional (v4)
 
-Site de página única, feito em HTML, CSS e JS puros e sem build. Para ver, abra o `index.html` no navegador ou publique a pasta em qualquer hospedagem estática (Netlify, Vercel, GitHub Pages, cPanel).
+Next.js (App Router) + TypeScript + Tailwind v4 · GSAP/ScrollTrigger · Lenis · Framer Motion · OGL.
+
+## Rodar
+
+```bash
+npm install
+npm run dev        # http://localhost:3000  ·  prancheta: http://localhost:3000/artboard
+npm run shots -- --phase 1   # capturas em screenshots/fase-1/
+npm run build
+```
 
 ## Onde editar
 
 | O quê | Onde |
 |---|---|
-| Número do WhatsApp, telefone exibido, e-mail, ano de fundação | constantes no topo de `assets/js/main.js` |
-| Mensagens prontas de cada botão | atributo `data-wa="..."` no `index.html` |
-| Cores, raios e espaçamentos | variáveis em `:root` no `assets/css/styles.css` |
+| Todos os textos, dados, WhatsApp, e-mail, produtos | `src/content.ts` |
+| Cores, escala tipográfica, espaçamentos | tokens no topo de `src/app/globals.css` |
+| Fotos | `public/images/` — no `content.ts`, troque `src: null` pelo caminho da foto |
 
-## Fotos provisórias (substituir)
+Itens marcados `[CONFIRMAR]` e imagens com `src: null` (placeholder areia `[FOTO: ...]`) ainda dependem da Faiber.
 
-Estas imagens trazem o texto "FOTO PROVISÓRIA". Para trocar, basta salvar a foto real com **o mesmo nome** (formato vertical, ~800×1000 px):
+## Artboard (só desenvolvimento)
 
-- `assets/img/produtos/coxinhas.jpg`
-- `assets/img/produtos/minis-festa.jpg`
-- `assets/img/produtos/enroladinho-salsicha.jpg`
-- `assets/img/produtos/mini-pizzas.jpg`
+`/artboard` mostra Desktop 1440, Tablet 768 e Celular 390 lado a lado, com zoom, recarregar,
+"Sem animações" (`?motion=0`), saltos por seção, rolagem sincronizada e modo foco (clique no rótulo/moldura; ESC volta).
+A rota responde 404 em produção. Com `?artboard=1` o site pula o preloader e desliga o cursor.
 
 ## Fontes
 
-Cabinet Grotesk (títulos) e Satoshi (texto), carregadas do Fontshare.
+Clash Display e Satoshi vêm do Fontshare (`<link>` no `layout.tsx`); IBM Plex Mono via `next/font`.
+Bricolage Grotesque fica como reserva dos títulos. No `npm run shots`, se o Fontshare estiver
+inacessível, Satoshi é substituída por Figtree só para a captura (`scripts/preview-fonts/`).

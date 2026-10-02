@@ -1,0 +1,237 @@
+@import "tailwindcss";
+
+/* ---------- Tokens ---------- */
+@theme {
+  --color-offwhite: #fefcf8;
+  --color-creme: #f7efe2;
+  --color-areia: #ebddc8;
+  --color-bordo: #6b1420;
+  --color-texto: #2b0a0e;
+  --color-laranja: #ffb74d;
+  --color-laranja-forte: #f28a1b;
+
+  --font-display: "Clash Display", var(--font-display-fallback), ui-sans-serif, sans-serif;
+  --font-body: "Satoshi", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+
+  --radius-card: 8px;
+  --radius-btn: 8px;
+}
+
+:root {
+  --gutter: 5vw;
+  --section-y: clamp(96px, 14vw, 200px);
+  /* celular: cada linha do título cabe sem órfãs; desktop: escala do briefing ajustada às 3 linhas */
+  --text-hero: 11.4vw;
+  --text-h2: clamp(2.5rem, 7vw, 6rem);
+  --text-body: clamp(1.05rem, 1.2vw, 1.2rem);
+  --shadow-card: 0 20px 50px rgba(43, 10, 14, 0.08);
+  --header-h: 84px;
+}
+@media (min-width: 768px) {
+  :root {
+    --text-hero: clamp(3.5rem, 8.8vw, 11rem);
+  }
+}
+
+/* ---------- Base ---------- */
+html {
+  background: var(--color-offwhite);
+  color: var(--color-texto);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.55;
+  background: var(--color-offwhite);
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--color-bordo);
+  color: var(--color-offwhite);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-laranja-forte);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ---------- Layout helpers ---------- */
+@utility container-x {
+  width: 100%;
+  padding-inline: var(--gutter);
+}
+
+@utility grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(12px, 1.6vw, 24px);
+}
+
+@utility section-y {
+  padding-block: var(--section-y);
+}
+
+@utility font-display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-feature-settings: "ss01";
+}
+
+@utility label-mono {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ---------- Text mask reveal ---------- */
+.line-mask {
+  display: block;
+  overflow: hidden;
+  /* espaço para descendentes e acentos sem cortar */
+  padding-block: 0.08em 0.1em;
+  margin-block: -0.08em -0.1em;
+}
+.line-mask > .line-inner {
+  display: block;
+  will-change: transform;
+}
+html.motion [data-reveal="lines"]:not([data-revealed]) .line-inner {
+  transform: translate3d(0, 110%, 0);
+}
+html.motion [data-reveal="fade"]:not([data-revealed]) {
+  opacity: 0;
+  transform: translate3d(0, 16px, 0);
+}
+html.motion [data-reveal="image"]:not([data-revealed]) {
+  clip-path: inset(100% 0 0 0);
+}
+
+/* ---------- Preloader (visível só quando o script de inicialização decide) ---------- */
+.preloader {
+  display: none;
+}
+html.show-preloader .preloader {
+  display: flex;
+}
+html.show-preloader body {
+  overflow: hidden;
+}
+
+/* ---------- Cursor ---------- */
+html.has-cursor,
+html.has-cursor * {
+  cursor: none !important;
+}
+html.has-cursor input,
+html.has-cursor textarea,
+html.has-cursor select {
+  cursor: text !important;
+}
+
+/* ---------- Roll (texto que rola no hover) ---------- */
+.roll {
+  position: relative;
+  display: inline-flex;
+  overflow: hidden;
+  line-height: 1.2;
+}
+.roll > span {
+  display: block;
+  transition: transform 0.55s var(--ease-out-expo);
+}
+.roll > span + span {
+  position: absolute;
+  inset: 0;
+  transform: translateY(105%);
+}
+.roll-host:hover .roll > span:first-child,
+.roll-host:focus-visible .roll > span:first-child {
+  transform: translateY(-105%);
+}
+.roll-host:hover .roll > span + span,
+.roll-host:focus-visible .roll > span + span {
+  transform: translateY(0);
+}
+
+/* ---------- Indicador de rolagem ---------- */
+@keyframes scroll-line {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  45% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  55% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+.scroll-line {
+  animation: scroll-line 2.2s var(--ease-in-out-quart) infinite;
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+html.reduced *,
+html.reduced *::before,
+html.reduced *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
+
+html.motion [data-reveal="split"] {
+  visibility: hidden;
+}
+.split-line {
+  padding-block: 0.06em 0.1em;
+  margin-block: -0.06em -0.1em;
+}
+
+html.motion svg[data-draw] path[pathLength] {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
